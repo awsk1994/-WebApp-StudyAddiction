@@ -1,7 +1,8 @@
 # Milestone 1
 
-###Member 1: Alex Wong (awong21@u.rochester.edu)
-###Member 2: Jin Chul Ann (jann@u.rochester.edu)
+**Member 1:** Alex Wong (awong21@u.rochester.edu)
+
+**Member 2:** Jin Chul Ann (jann@u.rochester.edu)
 
 ###Group Name: StudyAddicts
 ###Application Name: StudyAddiction
