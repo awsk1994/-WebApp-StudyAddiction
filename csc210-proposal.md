@@ -1,5 +1,5 @@
 Proposed Group/Website Name:
-Group Name: StudyAddicts.
+Group Name: StudyAddicts
 Application Name: “StudyAddiction”
 
 Proposed Idea:
