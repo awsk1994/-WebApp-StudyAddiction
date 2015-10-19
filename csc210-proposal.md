@@ -1,6 +1,11 @@
-Proposed Group/Website Name:
+Milestone 1
+
+Member 1: Alex Wong (awong21@u.rochester.edu)
+Member 2: Jin Chul Ann (jann@u.rochester.edu)
+
 Group Name: StudyAddicts
-Application Name: “StudyAddiction”
+
+Application Name: StudyAddiction
 
 Proposed Idea:
 Our web application aims to provide a service to our users by informing them of free tables to study at a given University. A big issue with this web application idea is detecting free tables. To solve this, this web application will take advantage of ‘User Morality’. It was inspired by Waze, a GPS app, whereby users would notify other users of traffics, police speed checks and other hazards/issues by posting the information onto the app. The app will in turn take the information and present it on the map to notify other Waze users. Waze users are rewarded by a loyalty system for doing this, but most importantly, it is using ‘user morality’ that by helping others, they will eventually help you back.
