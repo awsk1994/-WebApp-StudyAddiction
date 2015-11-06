@@ -29,7 +29,7 @@
 						if(data == 'OK')
 						{
 							//If duplicate key(username), then show error.
-							if ($("#nameBox").val() != null)
+							if ($("#nameBox").val() != null && $("#passwordBox").val() != null)
 							{
 								localStorage["username"]=[$("#nameBox").val()];
 								localStorage["password"]= $("#passwordBox").val();
