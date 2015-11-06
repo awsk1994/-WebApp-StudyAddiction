@@ -5,11 +5,26 @@
 	<script type="text/javascript">
 		$(document).ready(function()
 		{
-			if(localStorage["username"] != null)
+			if(localStorage["username"] != null && localStorage["password"] != null)
 			{
-				window.open("signedin.html", "_self");
+				$.ajax({
+					url: "users/" + localStorage["username"],
+					type: "GET",
+					dataType: "json",
+					success:function(data)
+					{
+						if(data.password == localStorage["password"])
+						{
+							window.open("signedin.html", "_self");
+						}
+						else
+						{
+							$("#status").html("ERROR - You shouldn't be here. Wrong username/password.");
+						}
+					},
+				});
 			}
-
+		
 			$(document).ajaxError(function()
 			{
 				alert("Sorry, there was a problem!");
