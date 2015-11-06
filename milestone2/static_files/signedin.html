@@ -1,0 +1,46 @@
+<html>
+<head>
+	<title> StudyAddicts </title>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			$(document).ajaxError(function()
+			{
+				alert("Sorry, there was a problem!");
+			});
+
+			$("#signoutButton").click(function()
+			{	
+				localStorage.clear();		
+				window.open("../signup.html", "_self");
+			});
+
+			$("#nameView").html(localStorage["username"]);
+			$("#passwordView").html(localStorage["password"]);
+			$("#bdayView").html(localStorage["bday"]);
+			$("#jobView").html(localStorage["job"]);
+			$("#emailView").html(localStorage["email"]);
+		});
+	</script>
+</head>
+
+<body>
+	<h1>Signed In</h1>
+	<p>
+		Names: <span id="nameView"></span><br>
+		Password: <span id="passwordView"></span><br>
+		Birthday: <span id="bdayView"></span><br>
+		Job: <span id="jobView"></span><br>
+		Email: <span id="emailView"></span><br>
+
+	</p>
+
+	<p>
+		<button id="signoutButton">Sign Out</button>
+		<button id="backButton">Back</button>
+	</p>
+
+	<div id="nameDiv"></div>
+	<div id="status"></div>
+</body>
