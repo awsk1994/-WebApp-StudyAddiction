@@ -7,8 +7,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static('static_files'));
 
+//Default user - so there is something in the database.
 var database = [
-{name: 'Philip', password: 'philip'}];
+{name: 'Jin', password: 'Ann'}];
 
 app.get('/', function (req, res)
 {
