@@ -11,16 +11,39 @@
 			});
 
 			$("#signoutButton").click(function()
-			{	
+			{
 				localStorage.clear();		
-				window.open("../signup.html", "_self");
+				window.open("index.html", "_self");
 			});
 
-			$("#nameView").html(localStorage["username"]);
-			$("#passwordView").html(localStorage["password"]);
-			$("#bdayView").html(localStorage["bday"]);
-			$("#jobView").html(localStorage["job"]);
-			$("#emailView").html(localStorage["email"]);
+			if(localStorage["username"] != null)
+			{
+				$.ajax({
+					url: "users/" + localStorage["username"],
+					type: "GET",
+					dataType: "json",
+					success:function(data)
+					{
+						if(data.password == localStorage["password"])
+						{
+							$("#nameView").html(data.name);
+							//$("#passwordView").html(data.password);
+							$("#bdayView").html(data.bday);
+							$("#jobView").html(data.job);
+							$("#emailView").html(data.email);
+							$("#status").html("Logged In.");
+						}
+						else
+						{
+							$("#status").html("ERROR - You shouldn't be here. Wrong username/password.");
+						}
+					},
+				});
+			}
+			else
+			{
+				$("#status").html("ERROR - You shouldn't be here. Wrong username/password.");
+			}
 		});
 	</script>
 </head>
@@ -28,12 +51,11 @@
 <body>
 	<h1>Signed In</h1>
 	<p>
-		Names: <span id="nameView"></span><br>
+		Name: <span id="nameView"></span><br>
 		Password: <span id="passwordView"></span><br>
 		Birthday: <span id="bdayView"></span><br>
 		Job: <span id="jobView"></span><br>
 		Email: <span id="emailView"></span><br>
-
 	</p>
 
 	<p>

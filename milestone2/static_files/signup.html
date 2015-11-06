@@ -5,10 +5,6 @@
 	<script type="text/javascript">
 		$(document).ready(function()
 		{
-			if(localStorage["username"] != null)
-			{
-				window.open('/signedin.html', '_self');
-			}
 			$(document).ajaxError(function()
 			{
 				alert("Sorry, there was a problem!");
@@ -20,8 +16,12 @@
 					url: "users/",
 					type: "POST",
 					dataType: "text",
-					data: { name: $("#nameBox").val(),
-							password: $("#passwordBox").val()
+					data: { 
+						name: $("#nameBox").val(),
+						password: $("#passwordBox").val(),
+						bday: $("#bdayBox").val(),
+						job: $("#jobBox").val(),
+						email: $("#emailBox").val(),
 							},
 					success:function(data)
 					{
@@ -29,30 +29,32 @@
 						if(data == 'OK')
 						{
 							//If duplicate key(username), then show error.
-							if (localStorage["username"] == null)
+							if ($("#nameBox").val() != null)
 							{
 								localStorage["username"]=[$("#nameBox").val()];
 								localStorage["password"]= $("#passwordBox").val();
-								localStorage["bday"]= $("#bdayBox").val();
-								localStorage["job"]=[$("#jobBox").val()];
-								localStorage["email"]= $("#emailBox").val();
 								$("#status").html("Success. Created user");
 								window.open('/signedin.html', '_self');
 							}
 							else
 							{
-								$("#status").html("ERROR: Username has already been taken. Please use another username.");
+								$("#status").html("ERROR: Please enter an username.");
 							}
+						}
+						else if(data == 'ERROR_Username')
+						{
+							$("#status").html("ERROR: Username has been taken. Please choose another username.")
 						}
 						else
 						{
-							$("#status").html("ERROR: could not create user");
+							$("#status").html("ERROR: Could not create user.");
 						}
 
 						$("#nameBox").val('');
 						$("#passwordBox").val('');
-
-
+						$("#bdayBox").val('');
+						$("#jobBox").val('');
+						$("#emailBox").val('');
 					},
 				});
 			});
@@ -72,7 +74,7 @@
 
 	<p>
 		<button id="submitButton">Submit</button>
-		<button id="backButton">Back</button>
+		<button onclick="location.href='../'">Back to Home</button>
 	</p>
 
 	<div id="nameDiv"></div>

@@ -1,0 +1,62 @@
+<html>
+<head>
+	<title> StudyAddicts </title>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if(localStorage["username"] != null)
+			{
+				window.open("signedin.html", "_self");
+			}
+
+			$(document).ajaxError(function()
+			{
+				alert("Sorry, there was a problem!");
+			});
+
+			$("#loginButton").click(function()
+			{
+				$.ajax({
+					url: "users/" + $("#nameBox").val(),
+					type: "GET",
+					dataType: "json",
+					success:function(data)
+					{
+						console.log("You received some data.");
+						if(data.password == $("#passwordBox").val())
+						{
+							console.log("USER AUTHORIZED.");
+							localStorage["username"] = $("#nameBox").val();
+							localStorage["password"] = $("#passwordBox").val()
+							window.open("signedin.html", "_self");
+						}
+						else
+						{
+							$("#status").html("Wrong username/password. Please try again.");
+						}
+
+						$("#nameBox").val('');
+						$("#passwordBox").val('');
+					},
+				});
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<h1>Sign In</h1>
+	<p>
+		Name: <input id="nameBox" type="text"/>
+		Password: <input id="passwordBox" type="password"/>
+	</p>
+
+	<p>
+		<button id="loginButton">Log In</button>
+		<button onclick="location.href='../'">Back to Home</button>
+	</p>
+
+	<div id="nameDiv"></div>
+	<div id="status"></div>
+</body>

@@ -1,0 +1,34 @@
+<html>
+<head>
+	<title> StudyAddicts </title>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			if(localStorage["username"] != null)
+			{
+				window.open('/signedin.html', '_self');
+			}
+
+			$(document).ajaxError(function()
+			{
+				alert("Sorry, there was a problem!");
+			});
+
+
+			$("#signupButton").click(function()
+			{
+				window.open("../signup.html", "_self");
+			});
+		}
+		);
+	</script>
+</head>
+
+<body>
+	<h1> STUDY ADDICTION </h1>
+	<p>
+		<button id="signupButton">Sign Up</button>
+		<button onclick="location.href='signin.html'">Sign In</button>
+	</p>
+</body>
