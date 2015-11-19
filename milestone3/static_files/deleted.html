@@ -1,0 +1,37 @@
+<html>
+<head>
+	<title> StudyAddicts </title>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			$(document).ajaxError(function()
+			{
+				alert("Sorry, there was a problem!");
+			});
+
+			//$("#returnHomeButton").click(function()
+			//{
+				//localStorage.clear();
+				//window.open("index.html", "_self")
+			//})
+
+
+		});
+	</script>
+</head>
+
+<body>
+	<h1> Deleted </h1>
+	<p>
+		Name: <span id="nameView"></span><br>
+		Password: <span id="passwordView"></span><br>
+		Birthday: <span id="bdayView"></span><br>
+		Job: <span id="jobView"></span><br>
+		Email: <span id="emailView"></span><br>
+	</p>
+	<p>
+		<button onclick="location.href=../">Back to Home</button>
+	</p>
+
+</body>

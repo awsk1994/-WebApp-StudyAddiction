@@ -1,0 +1,94 @@
+<html>
+<head>
+	<title> StudyAddicts </title>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			$(document).ajaxError(function()
+			{
+				alert("Sorry, there was a problem!");
+			});
+
+			$("#signoutButton").click(function()
+			{
+				localStorage.clear();		
+				window.open("index.html", "_self");
+			});
+
+			$("deleteUserBotton").click(function()
+			{
+				$.ajax(
+				{
+					url: "users/" + localStorage["username"],
+					type: "DELETE",
+					dataType: "text",
+					success:function(data)
+					{
+						console.log("You receieved some data!", data);
+						if (data == 'OK') {
+							$("#status").html("Successfully deleted.");
+							localStorage.clear();
+							window.open("/deleted.html", '_self');
+						}
+						else
+						{
+							$("#status").html("ERROR: Invalid user to be deleted.");
+						}
+					}
+
+				});
+
+
+			});
+
+			if(localStorage["username"] != null && localStorage["password"] != null)
+			{
+				$.ajax({
+					url: "users/" + localStorage["username"],
+					type: "GET",
+					dataType: "json",
+					success:function(data)
+					{
+						if(data.password == localStorage["password"])
+						{
+							$("#nameView").html(data.name);
+							//$("#passwordView").html(data.password);
+							$("#bdayView").html(data.bday);
+							$("#jobView").html(data.job);
+							$("#emailView").html(data.email);
+							$("#status").html("Logged In.");
+						}
+						else
+						{
+							$("#status").html("ERROR - You shouldn't be here. Wrong username/password.");
+						}
+					},
+				});
+			}
+			else
+			{
+				$("#status").html("ERROR - You shouldn't be here. Wrong username/password.");
+			}
+		});
+	</script>
+</head>
+
+<body>
+	<h1>Signed In</h1>
+	<p>
+		Name: <span id="nameView"></span><br>
+		Password: <span id="passwordView"></span><br>
+		Birthday: <span id="bdayView"></span><br>
+		Job: <span id="jobView"></span><br>
+		Email: <span id="emailView"></span><br>
+	</p>
+
+	<p>
+		<button id="signoutButton">Sign Out</button>
+		<button id="deleteUserBotton">Delete User</button>
+	</p>
+
+	<div id="nameDiv"></div>
+	<div id="status"></div>
+</body>
