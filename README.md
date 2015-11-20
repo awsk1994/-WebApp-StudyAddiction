@@ -6,5 +6,8 @@ This is a repository that contains files related to a web application, called "S
 **Milestone 2:** Go to milestone2 folder
 
 
+3rd party use: 
+Leaflet: http://leafletjs.com/
+Leaflet plugin (indoor-view, with floor changer): http://cbaines.net/projects/osm/leaflet-indoor/examples/
 
 ---

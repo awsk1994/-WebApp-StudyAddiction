@@ -1,0 +1,82 @@
+<html>
+<head>
+	<title> StudyAddicts </title>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			$(document).ajaxError(function()
+			{
+				alert("Sorry, there was a problem!");
+			});
+
+			$("#submitButton").click(function()
+			{				
+				$.ajax({
+					url: "users/",
+					type: "POST",
+					dataType: "text",
+					data: { 
+						name: $("#nameBox").val(),
+						password: $("#passwordBox").val(),
+						bday: $("#bdayBox").val(),
+						job: $("#jobBox").val(),
+						email: $("#emailBox").val(),
+							},
+					success:function(data)
+					{
+						console.log("You received some data.", data);
+						if(data == 'OK')
+						{
+							//If duplicate key(username), then show error.
+							if ($("#nameBox").val() != null && $("#passwordBox").val() != null)
+							{
+								localStorage["username"]=[$("#nameBox").val()];
+								localStorage["password"]= $("#passwordBox").val();
+								$("#status").html("Success. Created user");
+								window.open('/signedin.html', '_self');
+							}
+							else
+							{
+								$("#status").html("ERROR: Please enter an username.");
+							}
+						}
+						else if(data == 'ERROR_Username')
+						{
+							$("#status").html("ERROR: Username has been taken. Please choose another username.")
+						}
+						else
+						{
+							$("#status").html("ERROR: Could not create user.");
+						}
+
+						$("#nameBox").val('');
+						$("#passwordBox").val('');
+						$("#bdayBox").val('');
+						$("#jobBox").val('');
+						$("#emailBox").val('');
+					},
+				});
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<h1>Sign Up</h1>
+	<p>
+		Name: <input id="nameBox" type="text"/>
+		Password: <input id="passwordBox" type="password"/>
+		Birthday: <input id="bdayBox" type="text"/>
+		Job: <input id="jobBox" type="text"/>
+		Email: <input id="emailBox" type="text"/>
+	</p>
+
+	<p>
+		<button id="submitButton">Submit</button>
+		<button onclick="location.href='../'">Back to Home</button>
+	</p>
+
+	<div id="nameDiv"></div>
+	<div id="status"></div>
+</body>

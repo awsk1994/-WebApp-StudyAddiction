@@ -16,7 +16,7 @@
 				window.open("index.html", "_self");
 			});
 
-			$("#deleteUserBotton").click(function()
+			$("deleteUserBotton").click(function()
 			{
 				$.ajax(
 				{
@@ -26,10 +26,9 @@
 					success:function(data)
 					{
 						console.log("You receieved some data!", data);
-						if (data == 'OK') 
-						{
+						if (data == 'OK') {
 							$("#status").html("Successfully deleted.");
-							//localStorage.clear();
+							localStorage.clear();
 							window.open("/deleted.html", '_self');
 						}
 						else
