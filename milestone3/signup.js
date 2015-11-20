@@ -1,15 +1,11 @@
 var express = require('express');
 var app = express();
-<<<<<<< HEAD
 var sql = require ('sql.js');
 var fs = require('fs');
-=======
->>>>>>> origin/master
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-<<<<<<< HEAD
 app.use(express.static('static_files'));
 
 var sqliteExists = 1;
@@ -32,7 +28,6 @@ else
 	// Load the db
 	var db = new sql.Database(filebuffer);
 }
-=======
 
 app.use(express.static('static_files'));
 
@@ -44,7 +39,6 @@ app.get('/', function (req, res)
 {
 	res.sendFile(__dirname + '/static_files/signup.html');
 });
->>>>>>> origin/master
 
 /*
 GET list of users:
@@ -70,7 +64,6 @@ app.post('/users', function(req, res)
 		return;
 	}
 
-<<<<<<< HEAD
 	var stmt = db.prepare("SELECT * FROM database WHERE name=:uname", {':uname':myName});
 	if(!stmt.step())
 	{
@@ -89,7 +82,7 @@ app.post('/users', function(req, res)
 		res.send('ERROR_Username');
 		return;
 	}
-=======
+
 	for(var i=0; i<database.length; i++)
 	{
 		var e = database[i];
@@ -102,38 +95,34 @@ app.post('/users', function(req, res)
 
 	database.push(postBody);
 	res.send('OK');
->>>>>>> origin/master
 });
 
 //READ LIST OF USER
 app.get('/users', function(req, res)
 {
 	var allUsers = [];
-<<<<<<< HEAD
 	
 	var stmt = db.prepare("SELECT * FROM database");
 	while (stmt.step())
 		allUsers.push(stmt.getAsObject().name);
-=======
+
 	for(var i=0; i<database.length; i++)
 	{
 		var e = database[i];
 		allUsers.push(e.name);
 	}
 
->>>>>>> origin/master
 	res.send(allUsers);
 });
 
 //READ SPECIFIC USER
 app.get('/users/*', function(req, res)
 {
-<<<<<<< HEAD
 	var stmt = db.prepare("SELECT * FROM database WHERE name=:user");
 	var result = stmt.getAsObject({':user':req.params[0]});
 	res.send(result);
 	return;
-=======
+
 	var nameToLookup = req.params[0]; //matches '*' part of /users/*
 	for(var i=0; i<database.length; i++)
 	{
@@ -145,14 +134,12 @@ app.get('/users/*', function(req, res)
 		}
 	}
 	res.send('{}');	//failed, so return empty JSON object
->>>>>>> origin/master
 });
 
 //UPDATE USER PROFILE
 app.put('/users/*', function (req, res)
 {
 	var nameToLookup = req.params[0];
-<<<<<<< HEAD
 	var postBody = req.body;
 	for(key in postBody)
 	{
@@ -173,7 +160,6 @@ app.delete('/users/*', function (req, res)
 	var myName = req.params[0];
 	db.run("DELETE from database WHERE name=:uname", {':uname':myName});
 	res.send('OK');
-=======
 	for(var i=0; i<database.length; i++)
 	{
 		var e = database[i];
@@ -210,7 +196,6 @@ app.delete('/users/*', function (req, res)
 	}
 	res.send('ERROR');
 
->>>>>>> origin/master
 });
 
 var server = app.listen(3000, function()
