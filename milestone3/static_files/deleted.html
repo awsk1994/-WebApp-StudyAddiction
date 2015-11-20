@@ -5,39 +5,22 @@
 	<script type="text/javascript">
 		$(document).ready(function()
 		{
-			$("#message").html(localStorage["username"] + " has been deleted.");
+			//$("#message").html(localStorage["username"] + " has been deleted.");
 			localStorage.clear();
 			$(document).ajaxError(function()
 			{
 				alert("Sorry, there was a problem!");
 			});
-
-			//$("#returnHomeButton").click(function()
-			//{
-				//localStorage.clear();
-				//window.open("index.html", "_self")
-			//})
-
-
 		});
 	</script>
 </head>
 
 <body>
-	<h1> Deleted </h1>
+	<h1> Account has been deleted. </h1>
 	<p>
 		<span id="message"></span><br>
 	</p>
 	<p>
 		<button onclick="location.href='../'">Back to Home</button>
-		Name: <span id="nameView"></span><br>
-		Password: <span id="passwordView"></span><br>
-		Birthday: <span id="bdayView"></span><br>
-		Job: <span id="jobView"></span><br>
-		Email: <span id="emailView"></span><br>
 	</p>
-	<p>
-		<button onclick="location.href=../">Back to Home</button>
-	</p>
-
 </body>

@@ -13,27 +13,29 @@ var sqliteExists = 1;
 if(sqliteExists == 0)
 {
 	var db = new sql.Database();
-	sqlstr = "CREATE TABLE database (name char, password char, bday char, job char, email char);";
+	sqlstr = "CREATE TABLE data (name char, password char, bday char, job char, email char)";
 	db.run(sqlstr);
+	db.run("INSERT INTO data VALUES ('alex', 'wong', '12', 'student', 'a@a.com')");
+	db.run("INSERT INTO data VALUES ('jin', 'ann', '12', 'student', 'j@j.com')");
 
 	//EXPORT
 	var data = db.export();
 	var buffer = new Buffer(data);
-	fs.writeFileSync("database.sqlite", buffer);
+	fs.writeFileSync("data.sqlite", buffer);
 }
 else
 {
-	//Read database
-	var filebuffer = fs.readFileSync('database.sqlite');
+	//Read data
+	var filebuffer = fs.readFileSync('data.sqlite');
 	// Load the db
 	var db = new sql.Database(filebuffer);
 }
 
 app.use(express.static('static_files'));
 
-//Default user - so there is something in the database.
-var database = [
-{name: 'Jin', password: 'Ann'}];
+//Default user - so there is something in the data.
+//var data = [
+//{name: 'Jin', password: 'Ann'}];
 
 app.get('/', function (req, res)
 {
@@ -64,16 +66,16 @@ app.post('/users', function(req, res)
 		return;
 	}
 
-	var stmt = db.prepare("SELECT * FROM database WHERE name=:uname", {':uname':myName});
+	var stmt = db.prepare("SELECT * FROM data WHERE name=:uname", {':uname':myName});
 	if(!stmt.step())
 	{
-		db.run("INSERT INTO database VALUES (:name, :password, :bday, :job, :email)", 
+		db.run("INSERT INTO data VALUES (:name, :password, :bday, :job, :email)", 
 		{':name':postBody.name, ':password':postBody.password, ':bday':postBody.bday,
 			':job':postBody.job, ':email':postBody.email});
-		//export new database
+		//export new data
 		var data = db.export();
 		var buffer = new Buffer(data);
-		fs.writeFileSync("database.sqlite", buffer);
+		fs.writeFileSync("data.sqlite", buffer);
 
 		res.send('OK');
 	}
@@ -82,35 +84,17 @@ app.post('/users', function(req, res)
 		res.send('ERROR_Username');
 		return;
 	}
-
-	for(var i=0; i<database.length; i++)
-	{
-		var e = database[i];
-		if(e.name == myName)
-		{
-			res.send('ERROR_Username');
-			return;
-		}
-	}
-
-	database.push(postBody);
-	res.send('OK');
 });
 
 //READ LIST OF USER
 app.get('/users', function(req, res)
 {
 	var allUsers = [];
-	
-	var stmt = db.prepare("SELECT * FROM database");
+	console.log("1");
+	var stmt = db.prepare("SELECT * FROM data");
+	console.log("2");
 	while (stmt.step())
 		allUsers.push(stmt.getAsObject().name);
-
-	for(var i=0; i<database.length; i++)
-	{
-		var e = database[i];
-		allUsers.push(e.name);
-	}
 
 	res.send(allUsers);
 });
@@ -118,22 +102,10 @@ app.get('/users', function(req, res)
 //READ SPECIFIC USER
 app.get('/users/*', function(req, res)
 {
-	var stmt = db.prepare("SELECT * FROM database WHERE name=:user");
+	var stmt = db.prepare("SELECT * FROM data WHERE name=:user");
 	var result = stmt.getAsObject({':user':req.params[0]});
 	res.send(result);
 	return;
-
-	var nameToLookup = req.params[0]; //matches '*' part of /users/*
-	for(var i=0; i<database.length; i++)
-	{
-		var e = database[i];
-		if(e.name == nameToLookup)
-		{
-			res.send(e);
-			return;
-		}
-	}
-	res.send('{}');	//failed, so return empty JSON object
 });
 
 //UPDATE USER PROFILE
@@ -143,12 +115,12 @@ app.put('/users/*', function (req, res)
 	var postBody = req.body;
 	for(key in postBody)
 	{
-		db.run("UPDATE database SET '" + key + "'='" + postBody[key] + "' WHERE name='"+nameToLookup + "'");
+		db.run("UPDATE data SET '" + key + "'='" + postBody[key] + "' WHERE name='"+nameToLookup + "'");
 	}
-	//export new database
+	//export new data
 	var data = db.export();
 	var buffer = new Buffer(data);
-	fs.writeFileSync("database.sqlite", buffer);
+	fs.writeFileSync("data.sqlite", buffer);
 
 	res.send('OK');
 	return;
@@ -158,44 +130,12 @@ app.put('/users/*', function (req, res)
 app.delete('/users/*', function (req, res)
 {
 	var myName = req.params[0];
-	db.run("DELETE from database WHERE name=:uname", {':uname':myName});
+	db.run("DELETE from data WHERE name=:uname", {':uname':myName});
+	//EXPORT
+	var data = db.export();
+	var buffer = new Buffer(data);
+	fs.writeFileSync("data.sqlite", buffer);
 	res.send('OK');
-	for(var i=0; i<database.length; i++)
-	{
-		var e = database[i];
-		if(e.name == nameToLookup)
-		{
-			var postBody = req.body;
-			for(key in postBody)
-			{
-				var value = postBody[key];
-				e[key] = value;
-			}
-			res.send('OK');
-			return;
-		}
-	}
-
-	res.send('ERROR');
-});
-
-
-//DELETE USER PROFILE
-app.delete('/users/*', function (req, res)
-{
-	var nameToLookup = req.params[0];
-	for (var i=0; i<database.length; i++)
-	{
-		var e = database[i];
-		if (e.name = nameToLookup)
-		{
-			database.splice(i, 1);
-			res.send('OK');
-			return;
-		}
-	}
-	res.send('ERROR');
-
 });
 
 var server = app.listen(3000, function()
