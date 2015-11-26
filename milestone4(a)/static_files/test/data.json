@@ -1,0 +1,22 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "id": "way/0001",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [43.12505,-77.63],
+                        [43.1251, -77.63],
+                        [43.1251, -77.64],
+                        [43.12505,-77.64],
+                        [43.12505,-77.645]
+                    ]
+                ]
+            },
+            "properties": {"level": 1}
+        }
+    ]
+}

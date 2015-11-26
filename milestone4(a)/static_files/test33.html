@@ -1,0 +1,341 @@
+
+
+/*
+TODO:
+BUG -> when start, although we set it to level 3, it displays all stuff in all layers. 
+Finish the tables.
+*/
+
+<html>
+<head>
+     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <style>
+        #map{ height:500px;}
+    </style>
+    <title> StudyAddicts </title>
+    <script src="jquery-1.11.3.min.js"></script>
+
+     <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+     <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+    <script src="leaflet-indoor.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            $(document).ajaxError(function()
+            {
+                alert("Sorry, there was a problem!");
+            });
+
+            var mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYXdzazE5OTQiLCJhIjoiY2loZjc4cjk1MDRja3RyajcxZzZ5MzcxbSJ9.E_JGHPNkZ5_nC6AtQGINjQ';
+
+            var floor_1 = new L.LayerGroup().addLayer(L.tileLayer(mbUrl, {
+                    id: 'mapbox.streets',
+                    maxZoom: 21,
+                    minZoom: 16
+                }));
+
+            var floor_2 = new L.LayerGroup().addLayer(L.tileLayer(mbUrl, {
+                    id: 'mapbox.streets',
+                    maxZoom: 21,
+                    minZoom: 16
+                }));
+
+            var floor_3 = new L.LayerGroup().addLayer(L.tileLayer(mbUrl, {
+                    id: 'mapbox.streets',
+                    maxZoom: 21,
+                    minZoom: 16
+                }));
+
+            var topR = L.latLng(43.123, -77.6245),
+                botL = L.latLng(43.133,-77.635);
+
+            var map = L.map('map', 
+            {
+                center: [43.12505, -77.63],
+                zoom: 20,
+                //maxBounds: L.latLngBounds(topR, botL),
+                layers: [floor_3]
+            });
+
+            var baseLayers = {
+                "floor_1": floor_1,
+                "floor_2": floor_2,
+                "floor_3": floor_3
+            };
+
+            var overlays = {
+            };
+
+            L.control.layers(baseLayers,{}, 
+                {
+                    position: 'topright',
+                    collapsed: false
+                }
+                ).addTo(map);
+
+            var tables = 
+            {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.12503, -77.63034]
+                        },
+                        "level": 2,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 1"
+                        },
+                        "id": 1
+                    },
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.125, -77.63034]
+                        },
+                        "level": 2,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 2"
+                        },
+                        "id": 2
+                    },
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.1251, -77.63031]
+                        },
+                        "level": 2,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 3"
+                        },
+                        "id": 3
+                    },
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.12511, -77.63027]
+                        },
+                        "level": 2,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 4"
+                        },
+                        "id": 4
+                    },
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.125115, -77.630245]
+                        },
+                        "level": 2,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 5"
+                        },
+                        "id": 3
+                    },
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.12511, -77.63022]
+                        },
+                        "level": 2,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 2"
+                        },
+                        "id": 3
+                    },
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.12511, -77.63017]
+                        },
+                        "level": 2,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 2"
+                        },
+                        "id": 3
+                    },
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.12511, -77.630145]
+                        },
+                        "level": 2,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 2"
+                        },
+                        "id": 3
+                    },
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.124945, -77.63029]
+                        },
+                        "level": 2,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 55"
+                        },
+                        "id": 3
+                    },
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.124941, -77.63026]
+                        },
+                        "level": 2,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 2"
+                        },
+                        "id": 3
+                    },
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.124946, -77.63021]
+                        },
+                        "level": 2,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 2"
+                        },
+                        "id": 3
+                    },
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.124946, -77.63021]
+                        },
+                        "level": 1,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 2"
+                        },
+                        "id": 3
+                    },
+                    {
+                        "geometry": 
+                        {
+                            "type": "Point",
+                            "coordinates": [43.12493, -77.63021]
+                        },
+                        "level": 1,
+                        "type": "Feature",
+                        "properties": 
+                        {
+                            "popupContent": "POPUP 2"
+                        },
+                        "id": 3
+                    }
+
+                ]
+            };
+            var myStyle = 
+                {
+                    "color": "#ff7800",
+                    "weight": 5,
+                    "opacity": 1
+                };
+
+/*            L.marker([43.12509, -77.63005]).bindPopup('11').addTo(floor_1);
+            L.marker([43.12512, -77.63005]).bindPopup('22').addTo(floor_2);
+*/
+            function onEachFeature(feature, layer) 
+            {
+                var popupContent = "";
+                console.log(feature);
+
+                if (feature.properties && feature.properties.popupContent) 
+                {
+                    popupContent = feature.properties.popupContent;
+                }
+
+                layer.bindPopup(feature.properties.popupContent);
+            };
+
+            L.geoJson(tables, 
+            {
+                style: function (feature)
+                {
+                    return feature.properties && feature.properties.style;
+                },
+                onEachFeature: onEachFeature,
+                pointToLayer: function (feature, latlng) 
+                {
+                    var offset = 0.00001;
+                    var bounds = [
+                    [feature.geometry.coordinates[0]-(offset*1.2), 
+                        feature.geometry.coordinates[1]-offset],
+
+                    [feature.geometry.coordinates[0]+(offset*1.2), 
+                        feature.geometry.coordinates[1]+offset]
+                            ];
+                    if(feature.level == 1)
+                    {
+                        return L.rectangle(bounds,
+                        {
+                            color: "#ff7800", 
+                            weight: 2
+                        }).addTo(floor_1);
+                    }
+                    else if (feature.level == 2)
+                    {
+                        return L.rectangle(bounds,
+                        {
+                            color: "#ff3cee", 
+                            weight: 2
+                        }).addTo(floor_2);
+                    }
+                    else
+                    {
+                        return L.rectangle(bounds,
+                        {
+                            color: "#0edcee", 
+                            weight: 2
+                        })  
+                    }
+                }
+            }).addTo(map);
+
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Map</h1>
+    <div id="map"></div>
+</body>

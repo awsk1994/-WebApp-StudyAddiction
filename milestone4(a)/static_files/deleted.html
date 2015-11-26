@@ -1,0 +1,26 @@
+<html>
+<head>
+	<title> StudyAddicts </title>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			//$("#message").html(localStorage["username"] + " has been deleted.");
+			localStorage.clear();
+			$(document).ajaxError(function()
+			{
+				alert("Sorry, there was a problem!");
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<h1> Account has been deleted. </h1>
+	<p>
+		<span id="message"></span><br>
+	</p>
+	<p>
+		<button onclick="location.href='../'">Back to Home</button>
+	</p>
+</body>
