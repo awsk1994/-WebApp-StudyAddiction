@@ -39,22 +39,50 @@ FILES required by this html:
             var mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYXdzazE5OTQiLCJhIjoiY2loZjc4cjk1MDRja3RyajcxZzZ5MzcxbSJ9.E_JGHPNkZ5_nC6AtQGINjQ';
 
             //Set up layer for floor_1 and floor_2 [each with max and min zoom, and id (type of map to retrieve)]
-            var floor_1 = new L.LayerGroup().addLayer(L.tileLayer(mbUrl, {
+            var floor_1 = new L.LayerGroup();
+            var floor_2 = new L.LayerGroup();
+            var floor_3 = new L.LayerGroup();
+
+            floor_1.addLayer(L.tileLayer(mbUrl, {
+                id: 'mapbox.streets',
+                maxZoom: 21,
+                minZoom: 16
+            }));
+
+            floor_2.addLayer(L.tileLayer(mbUrl, {
                     id: 'mapbox.streets',
                     maxZoom: 21,
                     minZoom: 16
                 }));
 
-            var floor_2 = new L.LayerGroup().addLayer(L.tileLayer(mbUrl, {
+            floor_3.addLayer(L.tileLayer(mbUrl, {
                     id: 'mapbox.streets',
                     maxZoom: 21,
                     minZoom: 16
                 }));
+
+            //Load floor_1 and floor_2's border.
+            L.geoJson(floor1_border,
+            {
+                style: function (feature)
+                {
+                    return feature.properties && feature.properties.style;
+                } 
+            }).addTo(floor_1);
+
+            L.geoJson(floor2_border,
+            {
+                style: function (feature)
+                {
+                    return feature.properties && feature.properties.style;
+                } 
+            }).addTo(floor_2);
 
             //Variable for baseLayer
             var baseLayers = {
                 "floor_1": floor_1,
                 "floor_2": floor_2,
+                "floor_3": floor_3
             };
 
             //Variables for map boundaries.
@@ -81,6 +109,12 @@ FILES required by this html:
                 }
             ).addTo(map);
 
+            function onMapClick(e) {
+                console.log("You clicked the map at " + e.latlng);
+            }
+
+            map.on('click', onMapClick);
+
             //For each feature in our layer, we want it to have a pop-up message to indicate information for user.
             function onEachFeature(feature, layer) 
             {
@@ -91,34 +125,32 @@ FILES required by this html:
                 {
                     popupContent = feature.properties.popupContent;
                 }
-                layer.bindPopup(feature.properties.popupContent);
+                    
+                var occupied = "";
+                if(feature.occupied == 1)
+                    occupied = "occupied -> unoccupied";
+                else
+                    occupied = "unoccupied -> occupied";
 
-                layer.on("click", function()
-                {            
+                layer.bindPopup("Table ID: " + feature.id + ",Status: " + occupied);
+
+                layer.on('popupclose', function()
+                {      
+                    floor_1_table.clearLayers();
+                    floor_2_table.clearLayers();
                     socket.emit('chat message', feature.id);
                 });
             };
 
-            //Load floor_1 and floor_2's border.
-            L.geoJson(floor1_border,
-            {
-                style: function (feature)
-                {
-                    return feature.properties && feature.properties.style;
-                } 
-            }).addTo(floor_1);
-
-            L.geoJson(floor2_border,
-            {
-                style: function (feature)
-                {
-                    return feature.properties && feature.properties.style;
-                } 
-            }).addTo(floor_2);
+            var floor_1_table = new L.LayerGroup();
+            var floor_2_table = new L.LayerGroup();
+            floor_1_table.addTo(floor_1);
+            floor_2_table.addTo(floor_2);
 
             socket.on('chat message', function(data)
             {
                 //console.log("data: " + data);
+
                 var data_table = JSON.parse(data);
                 L.geoJson(data_table, 
                 {
@@ -161,7 +193,7 @@ FILES required by this html:
                             {
                                 color: color, 
                                 weight: 2
-                            }).addTo(floor_1);
+                            }).addTo(floor_1_table);
                         }
                         else if (feature.level == 2)
                         {
@@ -170,7 +202,7 @@ FILES required by this html:
                             {
                                 color: color, 
                                 weight: 2
-                            }).addTo(floor_2);
+                            }).addTo(floor_2_table)
                         }
                         else
                         {
@@ -181,7 +213,9 @@ FILES required by this html:
                             });
                         }
                     }
+
                 });
+
             });
         });
     </script>
