@@ -1,0 +1,73 @@
+Presentation:
+1min: Problem, Inspiration, Solution, Sounds stupid -> experiment
+2min: Leaflet:
+	 - bounds of the map
+	 - different floors
+	 
+	 - Open another browser to show update -> click table
+	 - Open table control -> modify
+	 - Open printer control -> modify
+
+
+1. PROBLEM
+So... many of us should have had the experience of going to the library to study, and upon arrival, realizes that there are no tables available. And so what do we do? 
+We find a free table. 
+But during times, like finals or even midterms, this may be very time-consuming.
+
+<-->
+So the first problem we aim to solve is -> finding tables in the library
+The second problem we aim to solve is... as a result of our first problem, people end up using their bags to 'reserve' seats and tables even though they don't really need it for now.
+Thus, by solving the first problem, we hope we can improve or solve the second.
+
+<-->
+The obvious solution is to put sensors on tables, but ofcourse, that is very unlikely. Thus, we tried to find a solution.
+We looked at multiple applications and we found our inspiration in...
+
+<-->
+Waze, a GPS mobile application, that utilizes a community based system whereby users can report events to notify other users of what is going on on the road. 
+To some degree, you can even think of this as Wikipedia's editing feature but in LIVE time and with less validation.
+
+<-->
+But with any solution, there are problems.
+
+<-->
+Who will bother to do it?
+Well... the developer of Waze probably had this question when they started. But I don't think this should be a barrier to experimenting, esp when Waze has already succeeded in overcoming this.
+
+Moving tables.
+This... I promise I'll come back to before I end.
+
+<--> 
+LIVE DEMO (if have time)
+ - carlson lib as an example
+ - map (leaflet) -> can be easily implemented to other libaries
+ - Click table -> toggle -> occupied, unoccupied
+ - printer -> queue
+ - printer/table control
+
+<-->
+Future usage -> so how can we expand this.
+Printers, as explained earlier -> can be maintained by a system to instantly update on how many people are printing and expected time wait until your request will be printed.
+I think this will be very useful especially for the Major's lab.
+
+Whiteboards -> Maintained by the libarian or by the same way as the tables so groups can know where to head out to do their group discussions with whitebaords without walking around aimlessly trying to find one.
+
+Moving tables... Certainly tables do move around. But how likely is that? Unlikely happen move a great distance in a day. Therefore, this can be maintained by the libarian. If he or she does choose to move a table, she can move the table in the application too. 
+
+<-->
+
+Before I end, I think this application can be expanded to other uses than library. 
+For example, maybe we can implement this to queues in starbucks and give users an expected time wait before they arrive at starbucks and find a long line.
+Another example could be the amount of people that are in danforth or any resturant and cafeteria - this would be useful if you don't like long lines in danforth.
+
+Thanks.
+
+
+
+
+
+
+
+
+
+
