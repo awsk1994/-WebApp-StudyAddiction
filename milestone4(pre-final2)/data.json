@@ -186,7 +186,7 @@
         ]
       },
       "level": 1,
-      "occupied": 1,
+      "occupied": 0,
       "type": "Feature",
       "properties": {
         "popupContent": "43.1249, -77.6303"
