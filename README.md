@@ -15,4 +15,4 @@ Leaflet plugin (indoor-view, with floor changer): https://github.com/cbaines/lea
 
 4-min presentation
 
-https://docs.google.com/presentation/d/1uxvLB5r9zNSWjC0xMgXBXdQAccolSIPItsDvWFgrQNk/edit#slide=id.p
+https://docs.google.com/presentation/d/1uxvLB5r9zNSWjC0xMgXBXdQAccolSIPItsDvWFgrQNk/edit?usp=sharing
