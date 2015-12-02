@@ -10,7 +10,7 @@
         ]
       },
       "level": 1,
-      "queue": 5,
+      "queue": 0,
       "type": "Feature",
       "properties": {
         "popupContent": "POPUP 1"

@@ -5,24 +5,46 @@
 	<script type="text/javascript">
 		$(document).ready(function()
 		{
-			if(localStorage["username"] != null && localStorage["password"] != null)
+			// if(localStorage["username"] != null && localStorage["password"] != null)
+			// {
+			// 	$.ajax({
+			// 		url: "users/" + localStorage["username"],
+			// 		type: "GET",
+			// 		dataType: "json",
+			// 		success:function(data)
+			// 		{
+			// 			if(data.password == localStorage["password"])
+			// 			{
+			// 				window.open("signedin.html", "_self");
+			// 			}
+			// 			else
+			// 			{
+			// 				$("#status").html("ERROR - You shouldn't be here. Wrong username/password.");
+			// 			}
+			// 		},
+			// 	});
+			// }
+			if (typeof localStorage !== 'undefined' && localStorage !== null) 
 			{
-				$.ajax({
+				if (localStorage["username"] != null && localStorage["password"] != null) 
+				{
+					$.ajax({
 					url: "users/" + localStorage["username"],
 					type: "GET",
 					dataType: "json",
 					success:function(data)
-					{
-						if(data.password == localStorage["password"])
 						{
-							window.open("signedin.html", "_self");
-						}
-						else
-						{
-							$("#status").html("ERROR - You shouldn't be here. Wrong username/password.");
-						}
-					},
-				});
+							if(data.password == localStorage["password"])
+							{
+								window.open("signedin.html", "_self");
+							}
+							else
+							{
+								$("#status").html("ERROR - You shouldn't be here. Wrong username/password.");
+							}
+						},
+					});
+				}
 			}
 		
 			$(document).ajaxError(function()
@@ -73,11 +95,14 @@
 		Name: <input id="nameBox" type="text"/>
 		<br><br>
 		Password: <input id="passwordBox" type="password"/>
+		<!-- Password: <span id="passwordView"></span><br>
+		Birthday: <span id="bdayView"></span><br>
+		Job: <span id="jobView"></span><br>
+		Email: <span id="emailView"></span><br> -->
 	</p>
 
 	<p>
 		<button id="loginButton">Log In</button>
-		<button onclick="location.href='../'">Back to Home</button>
 	</p>
 	<br>
 	<h2> ...or sign up NOW! </h2>
