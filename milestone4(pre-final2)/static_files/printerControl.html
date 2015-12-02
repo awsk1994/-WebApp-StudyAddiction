@@ -1,0 +1,80 @@
+<!--
+Referenced from
+Lecture 10 - CSC 210 Fall 2015
+Philip Guo
+This example was adapted from http://socket.io/get-started/chat/
+(Comments added by Philip Guo)
+-->
+
+<!doctype html>
+<html>
+  <head>
+    <title>Printer Control</title>
+    <!-- standard CSS stuff, you can ignore this -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+
+  <body>
+    <h1> Printer Control </h1>
+    <h3> Instructions </h3>
+    <p> Enter +(printer_id) to increment printer queue. </p>
+    <p> Enter -(printer_id) to decrement printer queue. </p>
+    <p> Enter 0 to receive json data on printer without changing anything. </p>
+    <br>
+
+    <!-- a list of tables, which starts out empty -->
+    <ul id="messages"></ul>
+    <form action="">
+      <!-- an input text box where the user types in tables,
+           followed by the "Send" button -->
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <!-- include the socket.io client (in-browser) library as well as the usual
+         jQuery library. (note that these are being loaded from other servers,
+         but you could've downloaded them beforehand yourself too.) -->
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
+    <script>
+      // Create a new socket.io object in the browser. By default, this
+      // creates a new WebSocket and connects to the corresponding socket.io
+      // object created on the server in index.js (in the 'io' variable there).
+      // If you wanted to connect to a different server than index.js on
+      // localhost:3000, then pass its URL as a parameter to io().
+      var socket = io();
+
+      // when the user submits the form by either pressing Enter in the
+      // input text box (with id "m") or clicking the Send button (buttons
+      // in HTML forms default to submitting them, weird!), run this function:
+      $('form').submit(function()
+      {
+        // grab the current value of string in the "m" input text box
+        // and send (emit) it to the server as a 'table' object.
+        // the server will then take it and emit it to all
+        // currently-connected browsers (including yourself)
+        socket.emit('printer', $('#m').val());
+
+        // clear the "m" input text box to prepare for your next chat
+        $('#m').val('');
+        return false; // return false so that the form doesn't reload the page
+      });
+
+      // this function runs when the server successfully sends (emits) a
+      // message of type 'table' to this browser
+      socket.on('printer', function(msg){
+        // append the message msg that you just received to the
+        // "#messages" <ul> list by creating a new <li> list item
+        $('#messages').append($('<li>').text(msg));
+      });
+    </script>
+  </body>
+</html>

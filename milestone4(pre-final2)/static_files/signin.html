@@ -1,0 +1,113 @@
+<html>
+<head>
+	<title> StudyAddicts </title>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			// if(localStorage["username"] != null && localStorage["password"] != null)
+			// {
+			// 	$.ajax({
+			// 		url: "users/" + localStorage["username"],
+			// 		type: "GET",
+			// 		dataType: "json",
+			// 		success:function(data)
+			// 		{
+			// 			if(data.password == localStorage["password"])
+			// 			{
+			// 				window.open("signedin.html", "_self");
+			// 			}
+			// 			else
+			// 			{
+			// 				$("#status").html("ERROR - You shouldn't be here. Wrong username/password.");
+			// 			}
+			// 		},
+			// 	});
+			// }
+			if (typeof localStorage !== 'undefined' && localStorage !== null) 
+			{
+				if (localStorage["username"] != null && localStorage["password"] != null) 
+				{
+					$.ajax({
+					url: "users/" + localStorage["username"],
+					type: "GET",
+					dataType: "json",
+					success:function(data)
+						{
+							if(data.password == localStorage["password"])
+							{
+								window.open("signedin.html", "_self");
+							}
+							else
+							{
+								$("#status").html("ERROR - You shouldn't be here. Wrong username/password.");
+							}
+						},
+					});
+				}
+			}
+		
+			$(document).ajaxError(function()
+			{
+				alert("Sorry, there was a problem!");
+			});
+
+			$("#loginButton").click(function()
+			{
+				$.ajax({
+					url: "users/" + $("#nameBox").val(),
+					type: "GET",
+					dataType: "json",
+					success:function(data)
+					{
+						console.log("You received some data.");
+						if(data.password == $("#passwordBox").val())
+						{
+							console.log("USER AUTHORIZED.");
+							localStorage["username"] = $("#nameBox").val();
+							localStorage["password"] = $("#passwordBox").val()
+							window.open("signedin.html", "_self");
+						}
+						else
+						{
+							$("#status").html("Wrong username/password. Please try again.");
+						}
+
+						$("#nameBox").val('');
+						$("#passwordBox").val('');
+					},
+				});
+			});
+			$("#signupButton").click(function()
+			{
+				window.open("signup.html", "_self");
+			});
+		});
+
+	</script>
+</head>
+
+<body>
+	<h1> Study Addiction <h1>
+	<h2>Log In</h2>
+	
+	<p>
+		Name: <input id="nameBox" type="text"/>
+		<br><br>
+		Password: <input id="passwordBox" type="password"/>
+		<!-- Password: <span id="passwordView"></span><br>
+		Birthday: <span id="bdayView"></span><br>
+		Job: <span id="jobView"></span><br>
+		Email: <span id="emailView"></span><br> -->
+	</p>
+
+	<p>
+		<button id="loginButton">Log In</button>
+	</p>
+	<br>
+	<h2> ...or sign up NOW! </h2>
+	<button id="signupButton">Sign Up</button>
+
+	<div id="nameDiv"></div>
+	<div id="status"></div>
+</body>
