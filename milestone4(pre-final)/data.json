@@ -122,7 +122,7 @@
         ]
       },
       "level": 2,
-      "occupied": 1,
+      "occupied": 0,
       "type": "Feature",
       "properties": {
         "popupContent": "POPUP 2"
@@ -282,7 +282,7 @@
         ]
       },
       "level": 1,
-      "occupied": 1,
+      "occupied": 0,
       "type": "Feature",
       "properties": {
         "popupContent": "43.124843, -77.63021]"
@@ -298,7 +298,7 @@
         ]
       },
       "level": 1,
-      "occupied": 1,
+      "occupied": 0,
       "type": "Feature",
       "properties": {
         "popupContent": "43.12487, -77.63021"
@@ -314,7 +314,7 @@
         ]
       },
       "level": 1,
-      "occupied": 1,
+      "occupied": 0,
       "type": "Feature",
       "properties": {
         "popupContent": "43.1249, -77.63021"
@@ -362,7 +362,7 @@
         ]
       },
       "level": 1,
-      "occupied": 1,
+      "occupied": 0,
       "type": "Feature",
       "properties": {
         "popupContent": "43.1248292, -77.63016"
@@ -394,7 +394,7 @@
         ]
       },
       "level": 1,
-      "occupied": 1,
+      "occupied": 0,
       "type": "Feature",
       "properties": {
         "popupContent": "43.124875, -77.63008"

@@ -10,6 +10,12 @@
 				alert("Sorry, there was a problem!");
 			});
 
+			$("#editinfoButton").click(function() 
+			{
+
+				window.open("editinfo.html", "_self");
+			});
+
 			$("#signoutButton").click(function()
 			{
 				localStorage.clear();		
@@ -94,6 +100,7 @@
 	</p>
 
 	<p>
+		<button id="editinfoButton">Edit Info</button>
 		<button id="signoutButton">Sign Out</button>
 		<button id="deleteUserBotton">Delete User</button>
 		<br>
