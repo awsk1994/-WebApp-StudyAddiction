@@ -1,0 +1,111 @@
+<html>
+<head>
+	<title> Edit Info </title>
+	<script src="jquery-1.11.3.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+			$(document).ajaxError(function()
+			{
+				alert("Sorry, there was a problem!");
+			});
+
+			if (typeof localStorage !== 'undefined' && localStorage !== null) 
+			{
+				if(localStorage["username"] == null || localStorage["password"] == null)
+				{
+					window.open("signin.html", "_self");
+				}
+			}
+			else
+			{
+				window.open("signin.html", "_self");
+			}
+
+			if(localStorage["username"] != null && localStorage["password"] != null)
+			{
+				$.ajax({
+					url: "users/" + localStorage["username"],
+					type: "GET",
+					dataType: "json",
+					success:function(data)
+					{
+						if(data.password == localStorage["password"])
+						{
+							$("#nameView").html(data.name);
+							// $("#passwordView").html(data.password);
+							// $("#bdayView").html(data.bday);
+							// $("#jobView").html(data.job);
+							// $("#emailView").html(data.email);
+							// $("#status").html("Logged In.");
+						}
+						else
+						{
+							$("#status").html("ERROR - You shouldn't be here. Wrong username/password.");
+						}
+					},
+				});
+			}
+
+			$("#EditButton").click(function()
+			{
+				// window.open("signup.html", "_self");
+				$.ajax({
+					url: "users/" + localStorage["username"],
+					type: "PUT",
+					dataType: "text",
+					data: {
+						password: $("#passwordBox").val(),
+						bday: $("#bdayBox").val(),
+						job: $("#jobBox").val(),
+						email: $("#emailBox").val(),
+					},
+					success:function(data)
+					{
+						console.log("You received some data", data);
+						if (data == 'OK')
+						{
+
+								console.log("data modifed");
+								localStorage["password"]= $("#passwordBox").val();
+								window.open("signedin.html", "_self");
+
+						} else {
+							$("#status").html("ERROR: Could not edit user.");
+						}
+						$("#passwordBox").val('');
+						$("#bdayBox").val('');
+						$("#jobBox").val('');
+						$("#emailBox").val('');
+					},
+				});
+			});
+		});
+
+	</script>
+</head>
+
+<body>
+	<h1> Edit Info <h1>
+	<h2><span id="nameView"></span>'s Profile</h2>
+	
+	<p>
+
+		<!-- Name: <input id="nameBox" type="text"/> -->
+		<!-- <br><br> -->
+		<!-- Password: <input id="passwordBox" type="password"/> -->
+		Password: <input id="passwordBox" type="password"/>
+		Birthday: <input id="bdayBox" type="text"/>
+		Job: <input id="jobBox" type="text"/>
+		Email: <input id="emailBox" type="text"/>
+	</p>
+
+	<p>
+		<button id="EditButton">Save Changes</button>
+		<button onclick="location.href='../signin.html'">Back</button>
+	</p>
+	<br>
+
+	<div id="nameDiv"></div>
+	<div id="status"></div>
+</body>

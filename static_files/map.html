@@ -1,0 +1,350 @@
+<!--
+FILES required by this html:
+ - data.json (for now - will fetch via HTTP later)
+ - border_data.js (containing coordinate for library borders)
+-->
+
+<html>
+<head>
+     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <style>
+        #map{ height:70%; width: 85%;}
+    </style>
+    <title> StudyAddicts </title>
+    <script src="jquery-1.11.3.min.js"></script>
+    <script src="border_data.js" type="text/javascript"></script>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+     <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+     <script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            if (typeof localStorage !== 'undefined' && localStorage !== null) 
+            {
+                if (localStorage["username"] != null && localStorage["password"] != null) 
+                {
+                    $.ajax({
+                    url: "users/" + localStorage["username"],
+                    type: "GET",
+                    dataType: "json",
+                    success:function(data)
+                        {
+                            if(data.password != localStorage["password"])
+                            {
+                                $("#status").html("ERROR - You shouldn't be here. Wrong username/password.");
+                                window.open("signin.html", "_self");
+                            }
+                        },
+                    });
+                }
+                else
+                {
+                    window.open("signin.html", "_self");
+                }
+            }
+        });
+    </script>
+
+    <script type="text/javascript">    
+        var socket = io();
+
+        $(document).ready(function()
+        {
+            $(document).ajaxError(function()
+            {
+                alert("Sorry, there was a problem!");
+            });
+            socket.emit('table', 0);
+            socket.emit('printer', 0);
+            var mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYXdzazE5OTQiLCJhIjoiY2loZjc4cjk1MDRja3RyajcxZzZ5MzcxbSJ9.E_JGHPNkZ5_nC6AtQGINjQ';
+
+            //Set up layer for floor_1 and floor_2 [each with max and min zoom, and id (type of map to retrieve)]
+            var floor_1 = new L.LayerGroup();
+            var floor_2 = new L.LayerGroup();
+            var urMap = new L.LayerGroup();
+
+            floor_1.addLayer(L.tileLayer(mbUrl, {
+                id: 'mapbox.streets',
+                maxZoom: 21,
+                minZoom: 16
+            }));
+
+            floor_2.addLayer(L.tileLayer(mbUrl, {
+                    id: 'mapbox.streets',
+                    maxZoom: 21,
+                    minZoom: 16
+                }));
+
+/*
+            urMap.addLayer(L.tileLayer(mbUrl, {
+                    id: 'mapbox.streets',
+                    maxZoom: 21,
+                    minZoom: 16
+                }));
+*/
+            //Load floor_1 and floor_2's border.
+            L.geoJson(floor1_border,
+            {
+                style: function (feature)
+                {
+                    return feature.properties && feature.properties.style;
+                } 
+            }).addTo(floor_1);
+
+            L.geoJson(floor2_border,
+            {
+                style: function (feature)
+                {
+                    return feature.properties && feature.properties.style;
+                } 
+            }).addTo(floor_2);
+
+            //Variable for baseLayer
+            var baseLayers = {
+                "floor_1": floor_1,
+                "floor_2": floor_2
+                //,"Univ of Rochester": urMap
+            };
+
+            //Variables for map boundaries.
+            var topR = L.latLng(43.123, -77.6245),
+                botL = L.latLng(43.133,-77.635);
+
+            //Set up map
+            //Default zoom is 20, center is set, and default layer is floor_1
+            var map = L.map('map', 
+            {
+                center: [43.12505, -77.63],
+                zoom: 20,
+                maxBounds: L.latLngBounds(topR, botL),
+                layers: [floor_1]
+            });
+
+            //Setup layer control.
+            //We do not need overlays (2nd param, non-exclusive layers)
+            L.control.layers(baseLayers,{}, 
+                {
+                    //Position UI to change layer on top right.
+                    position: 'topright',
+                    collapsed: false
+                }
+            ).addTo(map);
+
+            function onMapClick(e) {
+                console.log("You clicked the map at " + e.latlng);
+            }
+
+            map.on('click', onMapClick);
+
+            //For each feature in our layer, we want it to have a pop-up message to indicate information for user.
+            function onEachFeature(feature, layer) 
+            {
+                var popupContent = "";
+                //console.log(feature);
+
+                if (feature.properties && feature.properties.popupContent) 
+                {
+                    popupContent = feature.properties.popupContent;
+                }
+                    
+                var occupied = "";
+                if(feature.occupied == 1)
+                    occupied = "occupied -> unoccupied";
+                else
+                    occupied = "unoccupied -> occupied";
+
+                layer.bindPopup("Table ID: " + feature.id + ",Status: " + occupied);
+
+                layer.on('popupclose', function()
+                {      
+                    socket.emit('table', feature.id);
+                });
+            };
+
+            function onEachFeature2(feature, layer) 
+            {
+                var popupContent = "";
+                //console.log(feature);
+
+                if (feature.properties && feature.properties.popupContent) 
+                {
+                    popupContent = feature.properties.popupContent;
+                }
+                
+                layer.bindPopup("Printer ID: " + feature.id + ", Queue: " + feature.queue);
+
+            };
+
+            var floor_1_printer = new L.LayerGroup();
+            floor_1_printer.addTo(floor_1);
+            var floor_2_printer = new L.LayerGroup();
+            floor_2_printer.addTo(floor_2);
+
+            socket.on('printer', function(data)
+            {
+                floor_1_printer.clearLayers();
+                floor_2_printer.clearLayers();
+                var data_printer = JSON.parse(data);
+                console.log("got printer msg");
+
+                L.geoJson(data_printer, 
+                {
+                    onEachFeature: onEachFeature2,
+                    pointToLayer: function (feature, latlng)
+                    {
+                        console.log("coord: " + feature.geometry.coordinates[0]);
+                        var offset = 0.000008;
+                        var bounds = [
+                        [feature.geometry.coordinates[0]-(offset), 
+                            feature.geometry.coordinates[1]],
+                        [feature.geometry.coordinates[0], 
+                            feature.geometry.coordinates[1]-offset],
+                        [feature.geometry.coordinates[0]+(offset), 
+                            feature.geometry.coordinates[1]],
+                        [feature.geometry.coordinates[0], 
+                            feature.geometry.coordinates[1]+offset]
+                                ];
+
+                        var color = "";
+                        if(feature.queue < 0)
+                            color = "#2d041c";
+                        else if(feature.queue == 0)
+                            color = "#1dc34c";
+                        else if(feature.queue == 1)
+                            color = "#c1820a";
+                        else if(feature.queue == 2)
+                            color = "#985014"
+                        else 
+                            color = "#f00";
+
+                        if(feature.level == 1)
+                        {
+                            return L.polygon(bounds,
+                            {
+                                color: color, 
+                                weight: 2
+                            }).addTo(floor_1_printer);
+                        }
+                        else if(feature.level == 2)
+                        {
+                            return L.polygon(bounds,
+                            {
+                                color: color, 
+                                weight: 2
+                            }).addTo(floor_2_printer);
+                        }
+                        else
+                        {
+                            //do nothing
+                        }
+                    }
+                });
+            });
+
+
+            var floor_1_table = new L.LayerGroup();
+            var floor_2_table = new L.LayerGroup();
+            floor_1_table.addTo(floor_1);
+            floor_2_table.addTo(floor_2);
+
+            socket.on('table', function(data)
+            {
+                    floor_1_table.clearLayers();
+                    floor_2_table.clearLayers();
+
+                var data_table = JSON.parse(data);
+                L.geoJson(data_table, 
+                {
+                    /*
+                    style: function (feature)
+                    {
+                        return feature.properties && feature.properties.style;
+                    },*/
+
+                    onEachFeature: onEachFeature,
+                    pointToLayer: function (feature, latlng) 
+                    {
+                        //Set up rectangle for the tables.
+                        var offset = 0.000008;
+                        var bounds = [
+                        [feature.geometry.coordinates[0]-(offset), 
+                            feature.geometry.coordinates[1]-offset],
+
+                        [feature.geometry.coordinates[0]+(offset), 
+                            feature.geometry.coordinates[1]+offset]
+                                ];
+                                //console.log(bounds);
+
+                        //Set color based on occupied flag
+                        var color_free = "#53d769";
+                        var color_occupied = "#ff0000";
+                        var color_error = "3c3636";
+                        var color = "";
+
+                        if(feature.occupied == 0)
+                            color = color_free;
+                        else if(feature.occupied == 1)
+                            color = color_occupied;
+                        else
+                            color = color_error;
+
+                        //Add the tables to its respective layers.
+                        if(feature.level == 1)
+                        {
+                            return L.rectangle(bounds,
+                            {
+                                color: color, 
+                                weight: 2
+                            }).addTo(floor_1_table);
+                        }
+                        else if (feature.level == 2)
+                        {
+                            console.log("update");
+                            return L.rectangle(bounds,
+                            {
+                                color: color, 
+                                weight: 2
+                            }).addTo(floor_2_table)
+                        }
+                        else
+                        {
+                            return L.rectangle(bounds,
+                            {
+                                color: color_error, 
+                                weight: 2
+                            });
+                        }
+                    }
+
+                });
+
+            });
+            $("#signoutButton").click(function() {
+                localStorage.clear();       
+                window.open("index.html", "_self");
+            });
+            $("#backtoSignedIn").click(function() {
+                window.open("signedin.html", "_self");
+            });
+            $("#printerControl").click(function() {
+                window.open("printerControl.html", "_blank");
+            });        
+            $("#tableControl").click(function() {
+                window.open("tableControl.html", "_blank");
+            });    
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Table Availability</h1>
+    <div id="map"></div>
+    <button id="printerControl"> Printer Controller </button>
+    <button id="tableControl"> Table Controller </button>
+    <br>
+    <button id="backtoSignedIn">Back</button>
+    <button id="signoutButton">Sign Out</button>
+
+</body>

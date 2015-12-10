@@ -1,0 +1,37 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          43.12498,
+          -77.63008
+        ]
+      },
+      "level": 1,
+      "queue": 0,
+      "type": "Feature",
+      "properties": {
+        "popupContent": "POPUP 1"
+      },
+      "id": 1
+    },
+    {
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          43.12496,
+          -77.63039
+        ]
+      },
+      "level": 2,
+      "queue": 3,
+      "type": "Feature",
+      "properties": {
+        "popupContent": "POPUP 1"
+      },
+      "id": 2
+    }
+  ]
+}
