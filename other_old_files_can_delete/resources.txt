@@ -1,7 +1,0 @@
-Leaflet
-http://leafletjs.com/
-MapBox
-https://www.mapbox.com/
-Blog.
-http://boomphisto.blogspot.com/2011/07/nodejs-express-leaflet-postgis-awesome.html
-
