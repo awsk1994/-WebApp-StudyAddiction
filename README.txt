@@ -13,12 +13,14 @@ TEST-RUN:
 	This emits the local server onto the web via a temporary URL.
 	After you do this step, you can use the temporary URL shown on the terminal to go on the page. At the same time, other users can use this URL to log in and will be sharing the same database. If you do not do this step, then you will have to implement some sort of web-hosting application, or else, the server will only run on localhost:3000.
 	}
-3. On browser:
+3. On (any) browser, do either (a) or (b):
 	(a) Go to localhost:3000 (if didn’t do STEP 2)
   	(b) Go to http://<random numbers>.ngrok.io shown on terminal if you run ngrok (if you do STEP 2)
 
 4. Sign In / Sign Up
 5. After you sign in, click on “To Map”.
+
+*note that ngrok is a 3rd party software, and I did not program or contribute to this.
 
 EXPLANATION:
 map.html: 
