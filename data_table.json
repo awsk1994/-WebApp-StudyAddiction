@@ -394,7 +394,7 @@
         ]
       },
       "level": 1,
-      "occupied": 0,
+      "occupied": 1,
       "type": "Feature",
       "properties": {
         "popupContent": "43.124875, -77.63008"
@@ -442,7 +442,7 @@
         ]
       },
       "level": 1,
-      "occupied": 1,
+      "occupied": 0,
       "type": "Feature",
       "properties": {
         "popupContent": "43.12496, -77.6298"

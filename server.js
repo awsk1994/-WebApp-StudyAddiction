@@ -28,13 +28,13 @@ Programmed by Alex Wong and Jin Chul Ann
 */
 
 // ====== IMPORT node_modules ======
-var express = require('express');
+var express = require('express');		// minimal and flexible Node.js web application
 var app = express();
-var sql = require ('sql.js');
-var fs = require('fs');
+var sql = require ('sql.js');			// sql 3-rd party plugin
+var fs = require('fs');					// file system module
 var http = require('http').Server(app); // start an http server
 var io = require('socket.io')(http);
-var jsonfile = require('jsonfile');		//to read json file
+var jsonfile = require('jsonfile');		// read json file 3-rd party plugin
 
 
 // ====== SETUP ======
@@ -53,6 +53,45 @@ app.get('/', function (req, res)
 
 
 // ====== PART A: CRUD (Create, Read, Update, Delete) -- Account Info ======
+//TODO: Certain functionalities (such as read) may need to be disabled for security reasons.
+
+// SETUP
+// If data.sqlite exists, this is toggled on.
+// If toggled off, it will create a sqlite database (data.sqlite)
+// Reference the if-else statement a few lines below.
+var sqliteExists = 1;
+
+//Toggle sqliteExists off if there is no sqLite database. But this should be only done by the admin. 
+if(sqliteExists == 0)
+{
+	//Create table and insert 2 accounts into it.
+	var db = new sql.Database();
+	sqlstr = "CREATE TABLE data (name char, password char, bday char, job char, email char)";
+	db.run(sqlstr);
+	db.run("INSERT INTO data VALUES ('alex', 'wong', '12', 'student', 'a@a.com')");
+	db.run("INSERT INTO data VALUES ('jin', 'ann', '12', 'student', 'j@j.com')");
+
+	//EXPORT (update) local SQLiteDatabase
+	var data = db.export();
+	var buffer = new Buffer(data);
+	fs.writeFileSync("data.sqlite", buffer);
+}
+else
+{
+	//Read data
+	var filebuffer = fs.readFileSync('data.sqlite');
+
+	// Load the db
+	var db = new sql.Database(filebuffer);
+}
+
+// Listen at port 3000.
+var server = http.listen(3000, function()
+{	
+	var port = server.address().port;
+	console.log('Server started at http://localhost:%s/', port);
+});
+
 
 // CREATE USER
 app.post('/users', function(req, res)
@@ -66,6 +105,7 @@ app.post('/users', function(req, res)
 		return;
 	}
 
+	// In database, search for name = myName.
 	var stmt = db.prepare("SELECT * FROM data WHERE name=:uname", {':uname':myName});
 	if(!stmt.step())
 	{
@@ -74,7 +114,7 @@ app.post('/users', function(req, res)
 		{':name':postBody.name, ':password':postBody.password, ':bday':postBody.bday,
 			':job':postBody.job, ':email':postBody.email});
 
-		//Export new data
+		//Export new data (update local sqlite)
 		var data = db.export();
 		var buffer = new Buffer(data);
 		fs.writeFileSync("data.sqlite", buffer);
@@ -82,6 +122,7 @@ app.post('/users', function(req, res)
 	}
 	else
 	{
+		//Send Error message.
 		res.send('ERROR_Username');
 		return;
 	}
@@ -92,6 +133,7 @@ app.get('/users', function(req, res)
 {
 	var allUsers = [];
 	var stmt = db.prepare("SELECT * FROM data");
+	//Loop through all stmt, and push into allUsers list.
 	while (stmt.step())
 		allUsers.push(stmt.getAsObject().name);
 	res.send(allUsers);
@@ -139,53 +181,27 @@ app.delete('/users/*', function (req, res)
 	res.send('OK');
 });
 
-//Toggle sqliteExists off if there is no sqLite database. But this should be only done by the admin. 
-if(sqliteExists == 0)
-{
-	var db = new sql.Database();
-	sqlstr = "CREATE TABLE data (name char, password char, bday char, job char, email char)";
-	db.run(sqlstr);
-	db.run("INSERT INTO data VALUES ('alex', 'wong', '12', 'student', 'a@a.com')");
-	db.run("INSERT INTO data VALUES ('jin', 'ann', '12', 'student', 'j@j.com')");
-
-	//EXPORT SQLiteDatabase
-	var data = db.export();
-	var buffer = new Buffer(data);
-	fs.writeFileSync("data.sqlite", buffer);
-}
-else
-{
-	//Read data
-	var filebuffer = fs.readFileSync('data.sqlite');
-
-	// Load the db
-	var db = new sql.Database(filebuffer);
-}
-
-// Listen at port 3000.
-var server = http.listen(3000, function()
-{	
-	var port = server.address().port;
-	console.log('Server started at http://localhost:%s/', port);
-});
 
 // ===== PART B: Socket Communication with Client -- Table and Printer Info =====
-
-// If data.sqlite exists, this is toggled on.
-// If toggled off, it will create a sqlite database (data.sqlite)
-// Reference the if-else statement a few lines below.
-var sqliteExists = 1;
+/*
+	Clients do not talk to each other. Thus, this server receives information from 
+	many individual clients, and emits the messages to update the rest of the clients. 
+	At the same time, the server has a local copy of the data, and updates the local
+	copy as well.
+*/
 
 //Read json file synchrously 
+//TODO: is this fs redundant?
 var fs = require('fs');		// this is used ot read json file
+
+//Read json file (local files)
 var table_data = JSON.parse(fs.readFileSync(__dirname + '/data_table.json'));
 var printer_data = JSON.parse(fs.readFileSync(__dirname + '/data_printer.json'));
 
 //Socket IO connection to client: Printer and Table message.
 io.on('connection', function(socket)
 {
-  // When any user sends a 'table' to the server, run the inner
-  // function below ...
+  // When any user sends a 'table' to the server, run the inner function below ...
   // (note that this inner function runs only when someone sends a message to
   // the server. if nobody is sending messages, this function never runs)
 
