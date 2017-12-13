@@ -31,7 +31,7 @@ After you do this step, you can use the temporary URL shown on the terminal to g
 
 ## Components 
 
-### map.html: 
+map.html: 
 
 The main part of this application: map interface to allow user to click on table to toggle the availability on/off, and view printer queue as well.
 
