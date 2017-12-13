@@ -1,6 +1,6 @@
 # Study Addiction 
 
-## by Study Addicts (Alex Wong and Jin Chul Ann, 2015)
+By Study Addicts (Alex Wong and Jin Chul Ann, 2015)
 
 ## Brief Overview
 
